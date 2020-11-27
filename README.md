@@ -15,7 +15,7 @@ We Specify with how many posts per user we want to interact with, for example 3 
 
 And then the flags "-f", "-l", "-c" will be in charge to (f)ollow, (l)ike and ( c)omment on these posts.
 
-## Instalation
+## Installation
 
 ```
 pip install -r requirements.txt
