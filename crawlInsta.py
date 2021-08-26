@@ -17,7 +17,6 @@ parser.add_argument('-gp', help="Geckodriver's path")
 args = parser.parse_args() 
 
 if __name__=='__main__':
-    browser = webdriver.Chrome()
     numOfPost = 1
     comment = ""
 
@@ -41,6 +40,8 @@ if __name__=='__main__':
                 sys.exit()
             else:
                 browser = webdriver.Firefox(executable_path=args.gp)
+    if not args.b:
+        browser = webdriver.Chrome()
     myBot = Bot(args.e,args.p,args.f,numOfPost,comment,browser)
     myBot.login()
     myBot.crawlFrom(args.u)
