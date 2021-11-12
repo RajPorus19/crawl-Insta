@@ -2,43 +2,43 @@ import time
 
 class Bot:
 	def __init__(self,mail,password,canFollow,numOfLikes,commentText,browser):
-                self.mail = mail
-                self.password = password
-                self.browser = browser
-                self.canFollow = canFollow
-                self.numOfLikes = numOfLikes
-                self.commentText = commentText
+        self.mail = mail
+        self.password = password
+        self.browser = browser
+        self.canFollow = canFollow
+        self.numOfLikes = numOfLikes
+        self.commentText = commentText
 	def login(self):
-                print("getting on login page")
-                self.browser.get("https://www.instagram.com/accounts/login")
-                while True:
-                    try:
-                        accept_all = self.browser.find_element_by_xpath("//button[@class='aOOlW  bIiDR  ']")
-                        accept_all.click()
-                        break
-                    except:
-                        continue
-                keepTry = True
-                while keepTry:
-                    try:
-                        mail = self.browser.find_element_by_xpath("//input[@name='username']")
-                        password = self.browser.find_element_by_xpath("//input[@name='password']")
-                        submit = self.browser.find_element_by_xpath("//button[@type='submit']")
-                        mail.click()
-                        mail.send_keys(self.mail)
-                        password.click()
-                        password.send_keys(self.password)
-                        submit.click()
-                        keepTry=False
-                        time.sleep(3)
-                        print("login succeeded")
-                        break
-                    except:
-                            print("failed login")
-                            continue
+        print("getting on login page")
+        self.browser.get("https://www.instagram.com/accounts/login")
+        while True:
+            try:
+                accept_all = self.browser.find_element_by_xpath("//button[@class='aOOlW  bIiDR  ']")
+                accept_all.click()
+                break
+            except:
+                continue
+        keepTry = True
+        while keepTry:
+            try:
+                mail = self.browser.find_element_by_xpath("//input[@name='username']")
+                password = self.browser.find_element_by_xpath("//input[@name='password']")
+                submit = self.browser.find_element_by_xpath("//button[@type='submit']")
+                mail.click()
+                mail.send_keys(self.mail)
+                password.click()
+                password.send_keys(self.password)
+                submit.click()
+                keepTry=False
+                time.sleep(3)
+                print("login succeeded")
+                break
+            except:
+                print("failed login")
+                continue
 
-	def isLiked(self):
-		button = self.browser.find_element_by_xpath("//span[@class='fr66n']/button")
+    def isLiked(self):
+        button = self.browser.find_element_by_xpath("//span[@class='fr66n']/button")
         if 'fill="#ed4956"' in button.get_attribute('innerHTML'):
             print(self.browser.current_url, "is liked")
 			return True
