@@ -9,6 +9,7 @@ class Bot:
                 self.numOfLikes = numOfLikes
                 self.commentText = commentText
 	def login(self):
+                print("getting on login page")
                 self.browser.get("https://www.instagram.com/accounts/login")
                 while True:
                     try:
@@ -30,22 +31,29 @@ class Bot:
                         submit.click()
                         keepTry=False
                         time.sleep(3)
+                        print("login succeeded")
                         break
                     except:
+                            print("failed login")
                             continue
 
 	def isLiked(self):
 		button = self.browser.find_element_by_xpath("//span[@class='fr66n']/button")
-		if 'fill="#ed4956"' in button.get_attribute('innerHTML'):
+        if 'fill="#ed4956"' in button.get_attribute('innerHTML'):
+            print(self.browser.current_url, "is liked")
 			return True
 		else:
+            print(self.browser.current_url, "is not liked")
 			return False
 
 	def getOnPage(self,user):
+        print(self.browser.current_url, "page loaded")
 		self.browser.get("https://www.instagram.com/"+user)
 
 	def getPostCount(self):
-		return int(self.browser.find_elements_by_xpath("//span[@class='g47SY ']")[0].get_attribute('innerText'))
+        num = int(self.browser.find_elements_by_xpath("//span[@class='g47SY ']")[0].get_attribute('innerText'))
+        print(self.browser.current_url, f"found {num} posts")
+		return num
 
 	def likeAndCommentNum(self,user,num):
 		self.getOnPage(user)
@@ -76,6 +84,7 @@ class Bot:
                             continue
 
 	def comment(self):
+            print(self.browser.current_url, "post was commented")
             commentBox = self.browser.find_element_by_xpath("//textarea[@aria-label='Add a comment…']")
             commentBox.send_keys(self.commentText)
             submit = self.browser.find_element_by_xpath("//button[@type='submit']")
@@ -103,4 +112,5 @@ class Bot:
 		button = self.browser.find_elements_by_xpath("//button")
 		if button[0].get_attribute("innerHTML") == "Follow":
 			button[0].click()
+            print(self.browser.current_url, "page is followed")
 
