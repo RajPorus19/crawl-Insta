@@ -9,7 +9,14 @@ class Bot:
                 self.numOfLikes = numOfLikes
                 self.commentText = commentText
 	def login(self):
-                self.browser.get("https://www.instagram.com/")
+                self.browser.get("https://www.instagram.com/accounts/login")
+                while True:
+                    try:
+                        accept_all = self.browser.find_element_by_xpath("//button[@class='aOOlW  bIiDR  ']")
+                        accept_all.click()
+                        break
+                    except:
+                        continue
                 keepTry = True
                 while keepTry:
                     try:
@@ -22,16 +29,10 @@ class Bot:
                         password.send_keys(self.password)
                         submit.click()
                         keepTry=False
+                        time.sleep(3)
                         break
                     except:
                             continue
-                while True:
-                    try:
-                        later = self.browser.find_element_by_xpath("//button[@class='aOOlW   HoLwm ']")
-                        later.click()
-                        break
-                    except:
-                        continue
 
 	def isLiked(self):
 		button = self.browser.find_element_by_xpath("//span[@class='fr66n']/button")
