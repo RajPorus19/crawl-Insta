@@ -1,19 +1,21 @@
 import time
 
+
 class Bot:
-	def __init__(self,mail,password,canFollow,numOfLikes,commentText,browser):
+    def __init__(self, mail, password, canFollow, numOfLikes, commentText, browser):
         self.mail = mail
         self.password = password
         self.browser = browser
         self.canFollow = canFollow
         self.numOfLikes = numOfLikes
         self.commentText = commentText
-	def login(self):
+    def login(self):
         print("getting on login page")
         self.browser.get("https://www.instagram.com/accounts/login")
         while True:
             try:
-                accept_all = self.browser.find_element_by_xpath("//button[@class='aOOlW  bIiDR  ']")
+                accept_all = self.browser.find_element_by_xpath(
+                    "//button[@class='aOOlW  bIiDR  ']")
                 accept_all.click()
                 break
             except:
@@ -21,15 +23,18 @@ class Bot:
         keepTry = True
         while keepTry:
             try:
-                mail = self.browser.find_element_by_xpath("//input[@name='username']")
-                password = self.browser.find_element_by_xpath("//input[@name='password']")
-                submit = self.browser.find_element_by_xpath("//button[@type='submit']")
+                mail = self.browser.find_element_by_xpath(
+                    "//input[@name='username']")
+                password = self.browser.find_element_by_xpath(
+                    "//input[@name='password']")
+                submit = self.browser.find_element_by_xpath(
+                    "//button[@type='submit']")
                 mail.click()
                 mail.send_keys(self.mail)
                 password.click()
                 password.send_keys(self.password)
                 submit.click()
-                keepTry=False
+                keepTry = False
                 time.sleep(3)
                 print("login succeeded")
                 break
@@ -41,36 +46,36 @@ class Bot:
         button = self.browser.find_element_by_xpath("//span[@class='fr66n']/button")
         if 'fill="#ed4956"' in button.get_attribute('innerHTML'):
             print(self.browser.current_url, "is liked")
-			return True
-		else:
+            return True
+        else:
             print(self.browser.current_url, "is not liked")
-			return False
+            return False
 
-	def getOnPage(self,user):
+    def getOnPage(self,user):
         print(self.browser.current_url, "page loaded")
-		self.browser.get("https://www.instagram.com/"+user)
+        self.browser.get("https://www.instagram.com/"+user)
 
-	def getPostCount(self):
+    def getPostCount(self):
         num = int(self.browser.find_elements_by_xpath("//span[@class='g47SY ']")[0].get_attribute('innerText'))
         print(self.browser.current_url, f"found {num} posts")
-		return num
+        return num
 
-	def likeAndCommentNum(self,user,num):
-		self.getOnPage(user)
-		listPost = []
-		while len(listPost)<= num:
-			try:
-				posts = self.browser.find_elements_by_xpath("//div[@class='v1Nh3 kIKUG  _bz0w']")
-				for post in posts:
-					link = post.get_attribute('innerHTML').split('"')[1][1:]
-					if link not in listPost:
-						listPost.append(link)
-			except:
-				continue
-		for ext in listPost[:num]:
-			self.browser.get("https://www.instagram.com/"+user+'/'+ext)
-			time.sleep(1)
-			if(not self.isLiked()):
+    def likeAndCommentNum(self,user,num):
+        self.getOnPage(user)
+        listPost = []
+        while len(listPost)<= num:
+            try:
+                posts = self.browser.find_elements_by_xpath("//div[@class='v1Nh3 kIKUG  _bz0w']")
+                for post in posts:
+                    link = post.get_attribute('innerHTML').split('"')[1][1:]
+                    if link not in listPost:
+                        listPost.append(link)
+            except:
+                continue
+        for ext in listPost[:num]:
+            self.browser.get("https://www.instagram.com/"+user+'/'+ext)
+            time.sleep(1)
+            if(not self.isLiked()):
                             button = self.browser.find_element_by_xpath("//span[@class='fr66n']/button")
                             button.click()
                             time.sleep(3)
@@ -80,17 +85,17 @@ class Bot:
                                 except:
                                     time.sleep(5)
                                     self.comment()
-			else:
+            else:
                             continue
 
-	def comment(self):
+    def comment(self):
             print(self.browser.current_url, "post was commented")
             commentBox = self.browser.find_element_by_xpath("//textarea[@aria-label='Add a comment…']")
             commentBox.send_keys(self.commentText)
             submit = self.browser.find_element_by_xpath("//button[@type='submit']")
             submit.click()
-	def crawlFrom(self,user):
-		try:
+    def crawlFrom(self,user):
+        try:
                     self.getOnPage(user)
                     time.sleep(1)
                     if self.canFollow:
@@ -105,12 +110,11 @@ class Bot:
                         self.crawlFrom(user)
                     self.likeAndCommentNum(user,self.numOfLikes)
                     self.crawlFrom(name)
-		except:
-			self.crawlFrom(user)
-			
-	def follow(self):
-		button = self.browser.find_elements_by_xpath("//button")
-		if button[0].get_attribute("innerHTML") == "Follow":
-			button[0].click()
-            print(self.browser.current_url, "page is followed")
+        except:
+            self.crawlFrom(user)
+            
+    def follow(self):
+        button = self.browser.find_elements_by_xpath("//button")
+        if button[0].get_attribute("innerHTML") == "Follow":
+            button[0].click()
 
