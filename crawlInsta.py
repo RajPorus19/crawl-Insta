@@ -2,6 +2,9 @@ import argparse
 import sys
 from bot import Bot
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+capabilities = DesiredCapabilities.CHROME
+capabilities["goog:loggingPrefs"] = {"performance": "ALL"}  # chromedriver 75+
 
 parser = argparse.ArgumentParser(description='Unofficial Instagram crawler bot written in Python, using Selenium WebDriver')
 parser.add_argument('-e', help="The email you used for you Instagram account.")
@@ -13,6 +16,7 @@ parser.add_argument('-n', type=int, help="Number of post to interact with in an 
 parser.add_argument('-u', help="User from what the crawling should start.")
 parser.add_argument('-b', help="There are two supported drivers : 'chrome','geckodriver', Chrome is set by default.")
 parser.add_argument('-gp', help="Geckodriver's path")
+parser.add_argument('--get-followers', help="Get the followers of an account")
 
 args = parser.parse_args() 
 
@@ -41,7 +45,10 @@ if __name__=='__main__':
             else:
                 browser = webdriver.Firefox(executable_path=args.gp)
     if not args.b:
-        browser = webdriver.Chrome()
+        browser = webdriver.Chrome(desired_capabilities=capabilities)
     myBot = Bot(args.e,args.p,args.f,numOfPost,comment,browser)
     myBot.login()
-    myBot.crawlFrom(args.u)
+    if args.get_followers is not None:
+        myBot.get_followers(args.get_followers)
+    else:
+        myBot.crawlFrom(args.u)

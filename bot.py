@@ -1,4 +1,5 @@
 import time
+import requests
 
 
 class Bot:
@@ -118,3 +119,54 @@ class Bot:
         if button[0].get_attribute("innerHTML") == "Follow":
             button[0].click()
 
+    def get_followers(self,username):
+
+        self.getOnPage(username)
+
+        url = "https://i.instagram.com/api/v1/friendships/19318909/followers/?count=10000&search_surface=follow_list_page"
+
+        cookies = {}
+        cookies["logs"] = self.browser.get_log("performance")
+        cookies["mid"] = self.browser.get_cookie("mid")["value"]
+        cookies["ig_did"] = self.browser.get_cookie("ig_did")["value"]
+        cookies["csrftoken"] = self.browser.get_cookie("csrftoken")["value"]
+        cookies["ds_user_id"] = self.browser.get_cookie("ds_user_id")["value"]
+        cookies["sessionid"] = self.browser.get_cookie("sessionid")["value"]
+        cookies["shbid"] = self.browser.get_cookie("shbid")["value"]
+        cookies["shbts"] = self.browser.get_cookie("shbts")["value"]
+        cookies["rur"] = self.browser.get_cookie("rur")["value"]
+
+
+        headers = {}
+        headers['authority'] = 'i.instagram.com' 
+        headers['sec-ch-ua'] = "Chromium"
+        headers['x-ig-www-claim'] = "hmac.AR0roQYoHzddxr_PSFuZ0cDN_QwNwafDgjIEWOtR-ovf4eGu"
+        headers['sec-ch-ua-mobile'] = "?0"
+        headers['user-agent'] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36"
+        headers['accept'] = "*/*"
+        headers['x-asbd-id'] = '198387' 
+        headers['sec-ch-ua-platform'] = "Linux"
+        headers['x-ig-app-id'] = '936619743392459' 
+        headers['origin'] = 'https://www.instagram.com' 
+        headers['sec-fetch-site'] = 'same-site' 
+        headers['sec-fetch-mode'] = 'cors' 
+        headers['sec-fetch-dest'] = 'empty' 
+        headers['referer'] = 'https://www.instagram.com/' 
+        headers['accept-language'] = 'en-US,en;q=0.9' 
+        cookies_string = f"""mid={cookies["mid"]}; 
+        ig_did={cookies["ig_did"]}; 
+        csrftoken={cookies["csrftoken"]}; 
+        ds_user_id={cookies["ds_user_id"]}; 
+        sessionid={cookies["sessionid"]}; 
+        shbid={cookies["shbid"]};
+        shbts={cookies["shbts"]}; 
+        rur={cookies["rur"]}"""
+        headers['cookie'] = cookies_string.replace('\n','')
+
+
+        res = requests.get(url, headers=headers)
+        users = res.json()["users"]
+        for user in users:
+            print(user)
+
+        print(res)
